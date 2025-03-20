@@ -1,5 +1,14 @@
 ---
-clickhouse:
-  hosts:
-    clickhouse-01:
-      ansible_host: <IP_here>
+all:
+  children:
+    clickhouse:
+      hosts:
+        clickhouse-0.ru-central1.internal:
+          ansible_host: 51.250.11.122
+
+    vector:
+      hosts:
+        vector-0.ru-central1.internal:
+          ansible_host: 51.250.82.213
+        vector-1.ru-central1.internal:
+          ansible_host: 89.169.146.19
