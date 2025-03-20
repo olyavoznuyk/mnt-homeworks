@@ -2,7 +2,7 @@
 
 ## Подготовка к выполнению
 
-1. * Необязательно. Познакомьтесь с [LightHouse](https://youtu.be/ymlrNlaHzIY?t=929).
+1. "*" Необязательно. Познакомьтесь с [LightHouse](https://youtu.be/ymlrNlaHzIY?t=929).
 2. Создайте два пустых публичных репозитория в любом своём проекте: vector-role и lighthouse-role.
 3. Добавьте публичную часть своего ключа к своему профилю на GitHub.
 
@@ -39,8 +39,38 @@
 
 ---
 
-### Как оформить решение задания
+### Ответ
 
-Выполненное домашнее задание пришлите в виде ссылки на .md-файл в вашем репозитории.
+1. Инфраструктура по-прежнему создается с помощью [terraform](./terraform) с модулями, в результате динамически формируется inventory [prod.yml](playbook/inventory/prod.yml) по шаблону [inventory.tftpl](terraform/inventory.tftpl).  
 
----
+> Clickhouse и Lighthouse будут ставиться на отдельные ВМ, Vector на две другие ВМ.
+
+2. Инициализированы роли ansible_role_vector и ansible_role_lighthouse (поменяны имена, т.к. по новым правилам ansible-lint имя роли должно соответствовать `^[a-z][a-z0-9_]*$`)
+
+3. Оформил структуру, описал meta и README.md для ролей. Перенес таски и переменные для них из старого плейбука в роли, дополнил проверками на семейство дистрибутива. Линтером проверил код, исправил ошибки форматирования, затем выложил роли в GIT и создал теги по результирующим коммитам.  
+
+Ссылки на репозитории:
+
+* [Роль `ansible_role_lighthouse`](https://github.com/olyavoznuyk/ansible_role_lighthouse). В качестве зависимости роль использует официальную роль `nginxinc.nginx`
+
+* [Роль `ansible_role_vector`](https://github.com/olyavoznuyk/ansible_role_vector)
+
+4. Создан файл [requirements.yml](playbook/requirements.yml), где описана инсталляция ролей, привязку версии.  
+
+Установка прошла успешно:  
+
+![alt text](./img/galaxy.png)
+
+5. Сформирован [site.yml](playbook/site.yml), для play "Install Lighthouse" добавлены pre_tasks с установкой git. Изменения применены успешно:
+
+![alt text](./img/site.png)
+
+> Повторный запуск плейбука показал отсутствие изменений, т.е. идемпотентность соблюдена:
+
+![alt text](./img/ide.png)
+
+6. Доступ к Lighthouse и коннект к Clickhouse:
+
+![alt text](./img/final.png)
+
+7. [README.md](playbook/README.md)
