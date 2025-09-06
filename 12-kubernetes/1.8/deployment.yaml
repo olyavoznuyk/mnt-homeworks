@@ -1,0 +1,75 @@
+# apiVersion: apps/v1
+# kind: Deployment
+# metadata:
+#   name: nginx-multitool
+# spec:
+#   replicas: 1
+#   selector:
+#     matchLabels:
+#       app: nginx-multitool
+#   template:
+#     metadata:
+#       labels:
+#         app: nginx-multitool
+#     spec:
+#       containers:
+#       - name: nginx
+#         image: nginx:latest
+#         ports:
+#         - containerPort: 80
+#         volumeMounts:
+#         - name: web-content
+#           mountPath: /usr/share/nginx/html
+#           readOnly: true
+#       - name: multitool
+#         image: wbitt/network-multitool
+#         command: ["tail", "-f", "/dev/null"]
+#       volumes:
+#       - name: web-content
+#         configMap:
+#           name: nginx-webpage
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-multitool
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx-multitool
+  template:
+    metadata:
+      labels:
+        app: nginx-multitool
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:latest
+        ports:
+        - containerPort: 443
+        volumeMounts:
+        - name: web-content
+          mountPath: /usr/share/nginx/html
+          readOnly: true
+        - name: nginx-ssl
+          mountPath: /etc/nginx/ssl
+          readOnly: true
+        - name: nginx-config
+          mountPath: /etc/nginx/conf.d
+          readOnly: true
+      - name: multitool
+        image: wbitt/network-multitool
+        command: ["tail", "-f", "/dev/null"]
+      volumes:
+      - name: web-content
+        configMap:
+          name: nginx-webpage
+      - name: nginx-ssl
+        secret:
+          secretName: nginx-tls-secret
+      - name: nginx-config
+        configMap:
+          name: nginx-https-config
+

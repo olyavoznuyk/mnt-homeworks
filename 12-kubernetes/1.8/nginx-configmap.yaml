@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-webpage
+data:
+  index.html: |
+    <!DOCTYPE html>
+    <html>
+    <head><title>My Nginx Webpage</title></head>
+    <body>
+      <h1>Hello from nginx!</h1>
+      <p>I am using Nginx from ConfigMap, my name is Olya!</p>
+    </body>
+    </html>
