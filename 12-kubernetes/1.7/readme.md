@@ -54,6 +54,6 @@ docker@minikube:~$
 
 ![alt text](../img/nfs_pvc.png)
 
-> ручевя запись\чтение
+> ручная запись\чтение
 
 ![alt text](../img/write_read_nfs.png)
