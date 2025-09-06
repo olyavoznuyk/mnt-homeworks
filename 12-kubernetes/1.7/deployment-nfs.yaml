@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: multitool-nfs
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: multitool-nfs
+  template:
+    metadata:
+      labels:
+        app: multitool-nfs
+    spec:
+      containers:
+      - name: multitool
+        image: wbitt/network-multitool
+        command:
+          - sh
+          - -c
+          - >
+            while true; do
+              echo "Hello NFS $(date)" >> /mnt/data/testfile.txt;
+              sleep 5;
+            done
+        volumeMounts:
+          - name: nfs-storage
+            mountPath: /mnt/data
+      volumes:
+      - name: nfs-storage
+        persistentVolumeClaim:
+          claimName: nfs-pvc

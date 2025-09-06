@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: busybox-multitool-localpv
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: busybox-multitool-localpv
+  template:
+    metadata:
+      labels:
+        app: busybox-multitool-localpv
+    spec:
+      containers:
+        - name: busybox
+          image: busybox
+          command:
+            - sh
+            - -c
+            - |
+              while true; do
+                echo "Timestamp: $(date)" >> /mnt/data/data.txt
+                sleep 5
+              done
+          volumeMounts:
+            - name: storage
+              mountPath: /mnt/data
+
+        - name: multitool
+          image: wbitt/network-multitool
+          command:
+            - sh
+            - -c
+            - |
+              while true; do
+                echo "--- file contents ---"
+                cat /mnt/data/data.txt
+                sleep 5
+              done
+          volumeMounts:
+            - name: storage
+              mountPath: /mnt/data
+
+      volumes:
+        - name: storage
+          persistentVolumeClaim:
+            claimName: local-pvc
