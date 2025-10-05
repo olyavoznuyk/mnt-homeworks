@@ -1,0 +1,25 @@
+#cloud-config
+write_files:
+  - content: |
+      <!DOCTYPE html>
+      <html lang="en">
+        <head>
+          <meta charset="UTF-8">
+          <title>Cute cat image test</title>
+        </head>
+        <body>
+          <h1>You can see cute cat below</h1>
+          <div>
+            <img
+              src="https://os-netology-bucket.storage.yandexcloud.net/cute-cat"
+              alt="cute-cat" 
+              style="max-height: 600px"
+            />
+          </div>
+         </body>
+      </html>
+    path: "/var/www/html/index2.html"
+    owner: root:root
+    permissions: 0o664
+runcmd:
+  - mkdir /run/mydir
